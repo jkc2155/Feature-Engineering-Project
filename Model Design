@@ -1,0 +1,1 @@
+Student assessment scores are recoreded in the "studentAssessment.csv" data set. Using this score as the label, how can we aggregate the variables contained within the other 6 data sets in order to predict this student performance? 
