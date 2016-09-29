@@ -19,3 +19,10 @@ setwd("~/GitHub/Feature-Engineering-Project")
 # Create new data frame by combining Assessment data with Student Assessment data
 combined_assessment <- merge(std_assessments, assessments, by = "id_assessment", all = TRUE)
 
+# Isolate specific course to analyze
+table(combined_assessment$code_module)
+# Table indicates course "FFF" has highest number of rows at 54k
+
+# Create assessment data from course FFF
+FFF_Assessment <- subset(combined_assessment, code_module %in% "FFF")
+
