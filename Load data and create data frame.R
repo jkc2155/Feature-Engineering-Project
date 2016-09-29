@@ -52,10 +52,15 @@ df3 <- na.omit(df2)
 # confirm missing values are removed
 apply(df3,2,function(x) sum(is.na(x)))
 
-# Split data into training and test set at 3/4ths split
+# Split data into training and test set at 3/4ths split then we fit a linear regression model and test it on the test set. 
+
 index <- sample(1:nrow(df3),round(0.75*nrow(df3)))
 train <- df3[index,]
 test <- df3[-index,]
+lm.fit <- glm(score~., data=train)
+summary(lm.fit)
+pr.lm <- predict(lm.fit,test)
+MSE.lm <- sum((pr.lm - test$score)^2)/nrow(test)
 
 # Begin data preprocessing
 # Normalize data set
