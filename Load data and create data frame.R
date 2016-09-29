@@ -39,3 +39,6 @@ submission_time <- df$date - df$date_submitted
 df1 <- data.frame(df,submission_time)
 
 
+# Begin feature selection
+
+
