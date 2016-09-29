@@ -26,3 +26,16 @@ table(combined_assessment$code_module)
 # Create assessment data from course FFF
 FFF_Assessment <- subset(combined_assessment, code_module %in% "FFF")
 
+# Create working data frame
+df <- FFF_Assessment
+
+## Begin Feature Engineering on assessment Data
+# Create feature of time between assisgnemtn due date and time of actual submission
+submission_time <- df$date - df$date_submitted
+
+
+
+# Append new features to data frame
+df1 <- data.frame(df,submission_time)
+
+
