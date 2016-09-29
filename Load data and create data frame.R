@@ -1,5 +1,6 @@
 # Load Libraries
 library(tidyr)
+library(neuralnet)
 
 # Set working directory to data folder
 setwd("~/GitHub/Project Data Files")
@@ -33,12 +34,31 @@ df <- FFF_Assessment
 # Create feature of time between assisgnemtn due date and time of actual submission
 submission_time <- df$date - df$date_submitted
 
-
-
 # Append new features to data frame
 df1 <- data.frame(df,submission_time)
 
-
 # Begin feature selection
+df2 <- data.frame(df1$score, df1$assessment_type, df1$weight, df1$submission_time)
+
+# Rename columns
+names(df2) <- c("score","assessment_type","weight","submission_time")
+
+# Check for missing values in data set
+apply(df2,2,function(x) sum(is.na(x)))
+
+# Remove rows with missing values
+df3 <- na.omit(df2)
+
+# confirm missing values are removed
+apply(df3,2,function(x) sum(is.na(x)))
+
+# Split data into training and test set at 3/4ths split
+index <- sample(1:nrow(df3),round(0.75*nrow(df3)))
+train <- df3[index,]
+test <- df3[-index,]
+
+# Begin data preprocessing
+# Normalize data set
+
 
 
