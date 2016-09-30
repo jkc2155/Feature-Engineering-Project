@@ -2,6 +2,7 @@
 library(tidyr)
 library(neuralnet)
 library(clusterSim)
+library(nnet)
 
 # Set working directory to data folder
 setwd("~/GitHub/Project Data Files")
@@ -89,6 +90,4 @@ pr.lm <- predict(lm.fit,test)
 MSE.lm <- sum((pr.lm - test$score)^2)/nrow(test)
 
 # fit neural net
-n <- names(train)
-f <- as.formula(paste("score ~", paste(n[!n %in% "score"], collapse = " + ")))
-nn <- neuralnet(f,data=train,hidden=c(5,3),linear.output=T)
+nn <- neuralnet(score~weight+submission_time+CMA+TMA, data = train, hidden = 1, linear.output = TRUE)
