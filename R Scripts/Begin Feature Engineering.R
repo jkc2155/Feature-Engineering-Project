@@ -5,6 +5,16 @@ wd_data <- assessments <- read.csv("2014J_data.csv")
 # Set Project working directory
 setwd("~/GitHub/Feature-Engineering-Project")
 
+######################
+### Tidy your data ###
+######################
+
+library(tidyr)
+
+# Figure out how to spread the data
+wd_data_2 <- spread(wd_data, total_click, sum_click)
+
+
 ############################
 ### Feature Engineering ###
 ############################
