@@ -61,5 +61,5 @@ spread_assessment_mean <- tidyr::spread(assessment_score_mean, assessment_type, 
 
 spread_avg_click <- tidyr::spread(activity_type_sum_click, activity_type, 'mean(sum_click)')
 
-# Merge student data and average data and feature together
+# Merge student data and average data and features together into new data frame 
 
