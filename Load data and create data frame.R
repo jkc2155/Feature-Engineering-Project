@@ -91,4 +91,4 @@ MSE.lm <- sum((pr.lm - test$score)^2)/nrow(test)
 # fit neural net
 n <- names(train)
 f <- as.formula(paste("score ~", paste(n[!n %in% "score"], collapse = " + ")))
-nn <- neuralnet(f,data=train,hidden=c(5,3),linear.output=T)
+nn <- neuralnet(f,data=train,hidden=c(3,2),linear.output=T)
