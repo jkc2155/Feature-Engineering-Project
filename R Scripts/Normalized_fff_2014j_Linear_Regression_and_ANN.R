@@ -10,7 +10,10 @@ index <- sample(1:nrow(df5),round(0.75*nrow(df5)))
 train <- df5[index,]
 test <- df5[-index,]
 
-# Fit a linear regression model and test it on the test set (used for model evalutation later. 
+###################################
+## Fit a linear regression model ##
+###################################
+
 lm.fit <- glm(TMA~., data=train)
 summary(lm.fit)
 pr.lm <- predict(lm.fit,test)
