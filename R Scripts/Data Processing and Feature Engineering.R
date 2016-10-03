@@ -74,10 +74,27 @@ df <- merge(df, std_registration_fff_2014j, by = "id_student")
 ## Prepare Data.frame for model ##
 ##################################
 
-# Remove uneeded columns from dataframe
-sample_student_data <- subset(sample_student_data, select = -c(id_site, code_module, code_presentation) )
+# Check for missing values in data frame
+apply(df1,2,function(x) sum(is.na(x)))
 
-# Remove missing values in data frame
+# Begin feature selection and remove uneeded columns from dataframe
+df1 <- subset(df, select = -c(date_unregistration, date_registration) )
 
+# Replace missing values in data frame with "0"
+df1[is.na(df1)] <- 0
 
+# Remove categorical values from dataset
+df2 <- subset(df1, select = -c(final_result, disability, age_band, imd_band, highest_education, region, gender))
 
+# Convert values to numberic
+df2 <- sapply(df2, as.numeric )
+
+# Normalize numeric values
+df2 <- data.frame(scale(df2, center = TRUE, scale = TRUE))
+
+# Append normalized columns to categorical columns
+
+df3 <- data.frame(df2, df1$final_result, df1$disability, df1$age_band, df1$imd_band, df1$highest_education, df1$region, df1$gender)
+
+# Save data set
+write.csv(df3, file = "Normalized_fff_2014j_Dataset.csv")
