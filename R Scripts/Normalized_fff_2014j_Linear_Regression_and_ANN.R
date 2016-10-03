@@ -24,4 +24,15 @@ library(neuralnet)
 
 n <- names(train)
 f <- as.formula(paste("TMA ~", paste(n[!n %in% "TMA"], collapse = " + ")))
-nn <- neuralnet(f,data=train,hidden=8, err.fct="sse",linear.output=TRUE, algorithm="backprop", learningrate = 0.3)
+nn <- neuralnet(f,data=train,hidden=8, err.fct="sse",linear.output=TRUE, learningrate = 0.3, threshold = 0.5)
+
+#############################################
+## Predicting TMA using the neural network ##
+#############################################
+
+pr.nn <- compute(nn,test[,1:20])
+
+pr.nn_ <- pr.nn$net.result*(max(data$medv)-min(data$medv))+min(data$medv)
+test.r <- (test_$medv)*(max(data$medv)-min(data$medv))+min(data$medv)
+
+MSE.nn <- sum((test.r - pr.nn_)^2)/nrow(test_)
