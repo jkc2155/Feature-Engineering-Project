@@ -65,13 +65,21 @@ print(paste(MSE.lm,MSE.nn))
 
 par(mfrow=c(1,2))
 
+<<<<<<< HEAD
 plot(test$TMA,pr.nn_,col='red',main='Real vs predicted Neural Network',pch=18,cex=0.7)
 abline(0,1,lwd=2)
 legend('bottomright',legend='NN',pch=18,col='red', bty='n', cex=.95)
 
 plot(test$TMA,pr.lm,col='blue',main='Real vs Predicted Linear Model',pch=18, cex=0.7)
+=======
+{plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
 abline(0,1,lwd=2)
-legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
+legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
+
+{plot(test$TMA,pr.lm,col='blue',main='Real vs predicted LM',pch=18, cex=0.7)
+>>>>>>> origin/master
+abline(0,1,lwd=2)
+legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
 
 ################
 ## More Plots ##
