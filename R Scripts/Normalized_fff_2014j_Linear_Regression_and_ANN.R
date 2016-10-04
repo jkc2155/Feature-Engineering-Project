@@ -1,8 +1,13 @@
 # Load CSV
 df4 <- read.csv("Normalized_fff_2014j_Dataset.csv")
 
-# Select all numeric values
-df5 <- subset(df4, select = -c(df1.final_result, df1.disability, df1.age_band, df1.imd_band, df1.highest_education, df1.region, df1.gender, CMA))
+# Look for missing values
+apply(df4,2,function(x) sum(is.na(x)))
+
+df4 <- na.omit(df4)
+
+# Select all numeric values and remove columns with large amount of missing values
+df5 <- subset(df4, select = -c(final_result, disability, age_band, imd_band, highest_education, region, gender, CMA))
 
 # Split data into training and test set at 3/4ths split
 index <- sample(1:nrow(df5),round(0.75*nrow(df5)))
@@ -37,7 +42,7 @@ test <- data.frame(test1, test$TMA)
 
 names(test)[names(test) == 'test.TMA'] <- 'TMA'
 
-pr.nn <- compute(nn,test[,1:20])
+pr.nn <- compute(nn,test[,1:19])
 
 pr.nn_ <- pr.nn$net.result*(max(df5$TMA)-min(df5$TMA))+min(df5$TMA)
 test.r <- (test$TMA)*(max(df5$TMA)-min(df5$TMA))+min(df5$TMA)
@@ -56,33 +61,21 @@ print(paste(MSE.lm,MSE.nn))
 
 par(mfrow=c(1,2))
 
-<<<<<<< HEAD
-plot(test$TMA,pr.nn_,col='red',main='Real vs predicted Neural Network',pch=18,cex=0.7)
+plot(test$TMA,pr.nn_,col='red',main='Real vs Predicted Neural Network',pch=18,cex=0.7)
 abline(0,1,lwd=2)
-legend('bottomright',legend='NN',pch=18,col='red', bty='n', cex=.95)
+legend('bottomright',legend='NN',pch=18,col='red', bty='n')
 
-plot(test$TMA,pr.lm,col='blue',main='Real vs Predicted Linear Model',pch=18, cex=0.7)
-=======
-{plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
+plot(test$TMA,pr.lm,col='blue',main='Real vs predicted Linear Model',pch=18, cex=0.7)
 abline(0,1,lwd=2)
-legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
-
-{plot(test$TMA,pr.lm,col='blue',main='Real vs predicted LM',pch=18, cex=0.7)
->>>>>>> origin/master
-abline(0,1,lwd=2)
-legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
+legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
 
 ################
 ## More Plots ##
 ################
 
-<<<<<<< HEAD
 par(mfrow=c(1,1))
 
-{plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
-=======
-plot(test$TMA,pr.nn_,col='red',main='Real vs Predicted Neural Network',pch=18,cex=0.7)
->>>>>>> c6fb1cd7aac587bca21782e5172589af0b62d1bb
+{plot(test$TMA,pr.nn_,col='red',main='Real vs Predicted Neural Network',pch=18,cex=0.7)
 points(test$TMA,pr.lm,col='blue',pch=18,cex=0.7)
 abline(0,1,lwd=2)
 legend('bottomright',legend=c('NN','LM'),pch=18,col=c('red','blue'))}
