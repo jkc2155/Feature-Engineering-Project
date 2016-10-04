@@ -57,13 +57,13 @@ print(paste(MSE.lm,MSE.nn))
 
 par(mfrow=c(1,2))
 
-plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
+{plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
 abline(0,1,lwd=2)
-legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
+legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
 
-plot(test$TMA,pr.lm,col='blue',main='Real vs predicted lm',pch=18, cex=0.7)
+{plot(test$TMA,pr.lm,col='blue',main='Real vs predicted LM',pch=18, cex=0.7)
 abline(0,1,lwd=2)
-legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
+legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
 
 ################
 ## More Plots ##
@@ -73,3 +73,4 @@ plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
 points(test$TMA,pr.lm,col='blue',pch=18,cex=0.7)
 abline(0,1,lwd=2)
 legend('bottomright',legend=c('NN','LM'),pch=18,col=c('red','blue'))
+
