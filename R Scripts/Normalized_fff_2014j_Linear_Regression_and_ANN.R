@@ -4,7 +4,6 @@ df4 <- read.csv("Normalized_fff_2014j_Dataset.csv")
 # Select all numeric values
 df5 <- subset(df4, select = -c(df1.final_result, df1.disability, df1.age_band, df1.imd_band, df1.highest_education, df1.region, df1.gender, CMA))
 
-
 # Split data into training and test set at 3/4ths split
 index <- sample(1:nrow(df5),round(0.75*nrow(df5)))
 train <- df5[index,]
@@ -57,11 +56,19 @@ print(paste(MSE.lm,MSE.nn))
 
 par(mfrow=c(1,2))
 
+<<<<<<< HEAD
+plot(test$TMA,pr.nn_,col='red',main='Real vs predicted Neural Network',pch=18,cex=0.7)
+abline(0,1,lwd=2)
+legend('bottomright',legend='NN',pch=18,col='red', bty='n', cex=.95)
+
+plot(test$TMA,pr.lm,col='blue',main='Real vs Predicted Linear Model',pch=18, cex=0.7)
+=======
 {plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
 abline(0,1,lwd=2)
 legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
 
 {plot(test$TMA,pr.lm,col='blue',main='Real vs predicted LM',pch=18, cex=0.7)
+>>>>>>> origin/master
 abline(0,1,lwd=2)
 legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
 
@@ -69,9 +76,13 @@ legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)}
 ## More Plots ##
 ################
 
+<<<<<<< HEAD
 par(mfrow=c(1,1))
 
 {plot(test$TMA,pr.nn_,col='red',main='Real vs predicted NN',pch=18,cex=0.7)
+=======
+plot(test$TMA,pr.nn_,col='red',main='Real vs Predicted Neural Network',pch=18,cex=0.7)
+>>>>>>> c6fb1cd7aac587bca21782e5172589af0b62d1bb
 points(test$TMA,pr.lm,col='blue',pch=18,cex=0.7)
 abline(0,1,lwd=2)
 legend('bottomright',legend=c('NN','LM'),pch=18,col=c('red','blue'))}
