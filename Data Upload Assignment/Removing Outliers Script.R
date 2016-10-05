@@ -660,3 +660,35 @@ outlierKD21 <- function(df3, var) {
     return(invisible(studied_credits))
   }
 }
+
+outlierKD_final_result <- function(df3, var) {
+  final_result <- eval(substitute(var),eval(df3))
+  na1 <- sum(is.na(final_result))
+  m1 <- mean(final_result, na.rm = T)
+  par(mfrow=c(2, 2), oma=c(0,0,3,0))
+  boxplot(final_result, main="With outliers")
+  hist(final_result, main="With outliers", xlab=NA, ylab=NA)
+  outlier <- boxplot.stats(final_result)$out
+  mo <- mean(outlier)
+  final_result <- ifelse(final_result %in% outlier, NA, final_result)
+  boxplot(final_result, main="Without outliers")
+  hist(final_result, main="Without outliers", xlab=NA, ylab=NA)
+  title("Outlier Check", outer=TRUE)
+  na2 <- sum(is.na(final_result))
+  cat("Outliers identified:", na2 - na1, "n")
+  cat("Propotion (%) of outliers:", round((na2 - na1) / sum(!is.na(final_result))*100, 1), "n")
+  cat("Mean of the outliers:", round(mo, 2), "n")
+  m2 <- mean(final_result, na.rm = T)
+  cat("Mean without removing outliers:", round(m1, 2), "n")
+  cat("Mean if we remove outliers:", round(m2, 2), "n")
+  response <- readline(prompt="Do you want to remove outliers and to replace with NA? [yes/no]: ")
+  if(response == "y" | response == "yes"){
+    df3[as.character(substitute(var))] <- invisible(final_result)
+    assign(as.character(as.list(match.call())$df3), df3, envir = .GlobalEnv)
+    cat("Outliers successfully removed", "n")
+    return(invisible(df3))
+  } else{
+    cat("Nothing changed", "n")
+    return(invisible(final_result))
+  }
+}

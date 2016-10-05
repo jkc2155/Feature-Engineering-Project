@@ -122,7 +122,7 @@ source('~/GitHub/Feature-Engineering-Project/Data Upload Assignment/Removing Out
 ## Remove Outliers from Dataset ##
 ##################################
 
-outlierKD1(df3, TMA)
+outlierKD_final_result(df3, final_result)
 y
 outlierKD2(df3, dataplus)
 y
