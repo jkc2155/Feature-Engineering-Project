@@ -92,11 +92,25 @@ df2 <- sapply(df2, as.numeric )
 # Normalize numeric values
 df2 <- data.frame(scale(df2, center = TRUE, scale = TRUE))
 
-# Append normalized columns to categorical columns
+######################################################
+## Append normalized columns to categorical columns ##
+######################################################
 
 df3 <- data.frame(df2, df1$final_result, df1$disability, df1$age_band, df1$imd_band, df1$highest_education, df1$region, df1$gender)
 
 names(df3) <- c("id_student","dataplus","dualpane","forumng","glossary","homepage","htmlactivity","oucollaborate","oucontent","ouwiki","page","questionnaire","quiz","repeatactivity","resource","subpage","url","CMA","TMA","num_of_prev_attempts","studied_credits","final_result","disability","age_band","imd_band","highest_education","region","gender")
+
+###########################################################
+## Convert Categorical String Features to Numeric Values ##
+###########################################################
+
+df3$final_result <- as.numeric(factor(df3$final_result , levels=c("Distinction","Fail","Pass","Withdrawn")))
+df3$disabilityt <- as.numeric(factor(df3$disability , levels=c("N","Y")))
+df3$age_band <- as.numeric(factor(df3$age_band , levels=c("0-35","35-55","55<=")))
+df3$imd_band <- as.numeric(factor(df3$imd_band , levels=c( "","0-10%","10-20","20-30%","30-40%" ,"40-50%","50-60%","60-70%","70-80%","80-90%","90-100%")))
+df3$highest_education <- as.numeric(factor(df3$highest_education , levels=c("A Level or Equivalent","HE Qualification","Lower Than A Level","No Formal quals","Post Graduate Qualification")))
+df3$region <- as.numeric(factor(df3$region , levels=c("East Anglian Region","East Midlands Region","Ireland","London Region","North Region","North Western Region","Scotland","South East Region","South Region","South West Region","Wales","West Midlands Region","Yorkshire Region")))
+df3$gender <- as.numeric(factor(df3$gender , levels=c("M","F")))
 
 #################################
 ## Prepare Outliers in Dataset ##
@@ -104,32 +118,52 @@ names(df3) <- c("id_student","dataplus","dualpane","forumng","glossary","homepag
 
 source('~/GitHub/Feature-Engineering-Project/Data Upload Assignment/Removing Outliers Script.R')
 
-
 ##################################
 ## Remove Outliers from Dataset ##
 ##################################
 
 outlierKD1(df3, TMA)
+y
 outlierKD2(df3, dataplus)
+y
 outlierKD3(df3, dualpane)
+y
 outlierKD4(df3, forumng)
+y
 outlierKD5(df3, glossary)
+y
 outlierKD6(df3, homepage)
+y
 outlierKD7(df3, htmlactivity)
+y
 outlierKD8(df3, oucollaborate)
+y
 outlierKD9(df3, oucontent)
+y
 outlierKD10(df3, ouwiki)
+y
 outlierKD11(df3, page)
+y
 outlierKD12(df3, questionnaire)
+y
 outlierKD13(df3, quiz)
+y
 outlierKD14(df3, repeatactivity)
+y
 outlierKD15(df3, resource)
+y
 outlierKD16(df3, subpage)
+y
 outlierKD17(df3, url)
+y
 outlierKD18(df3, CMA)
+y
 outlierKD19(df3, TMA)
+y
 outlierKD20(df3, num_of_prev_attempts)
+y
 outlierKD21(df3, studied_credits)
+y
 
 #################################
 ## Export and Save New Dataset ##
