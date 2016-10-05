@@ -45,15 +45,17 @@ MSE.lm <- sum((pr.lm - final_result_Test$final_result)^2)/nrow(final_result_Test
 ####################
 ## Fit Neural Net ##
 ####################
+
 library(neuralnet)
 
 n <- names(final_result_Train)
 f <- as.formula(paste("final_result ~", paste(n[!n %in% "final_result"], collapse = " + ")))
 nn <- neuralnet(f,data=final_result_Train,hidden=10, err.fct="sse",linear.output=TRUE, learningrate = 0.3, threshold = 0.5)
 
-#############################################
+######################################################
 ## Predicting final_result using the neural network ##
-#############################################
+######################################################
+
 final_result_Test1 <- subset(final_result_Test, select = -c(final_result))
 
 final_result_Test <- data.frame(final_result_Test1, final_result_Test$final_result)

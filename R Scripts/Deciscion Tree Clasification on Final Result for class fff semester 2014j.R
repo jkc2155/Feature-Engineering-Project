@@ -4,6 +4,7 @@
 
 library(tidyr)
 library(dplyr)
+library(tree)
 
 #################################
 ## Load Data Frames from Files ##
@@ -39,7 +40,6 @@ std_registration_fff_2014j <- subset(std_registration_df, code_module %in% "FFF"
 std_vle_fff_2014j <- subset(std_vle_df, code_module %in% "FFF" & code_presentation %in% "2014J", select = c(id_student, id_site, date, sum_click))
 
 vle_fff_2014j <- subset(vle_df, code_module %in% "FFF" & code_presentation %in% "2014J", select = c(id_site, activity_type))
-
 
 ########################
 ## Feature Generation ##
@@ -83,26 +83,9 @@ df1 <- subset(df, select = -c(date_unregistration, date_registration) )
 # Replace missing values in data frame with "0"
 df1[is.na(df1)] <- 0
 
-# Remove categorical values from dataset
-df2 <- subset(df1, select = -c(final_result, disability, age_band, imd_band, highest_education, region, gender))
+df3 <- df1
 
-# Convert values to numeric
-df2 <- sapply(df2, as.numeric )
-
-# Normalize numeric values
-df2 <- data.frame(scale(df2, center = TRUE, scale = TRUE))
-
-######################################################
-## Append normalized columns to categorical columns ##
-######################################################
-
-df3 <- data.frame(df2, df1$final_result, df1$disability, df1$age_band, df1$imd_band, df1$highest_education, df1$region, df1$gender)
-
-names(df3) <- c("id_student","dataplus","dualpane","forumng","glossary","homepage","htmlactivity","oucollaborate","oucontent","ouwiki","page","questionnaire","quiz","repeatactivity","resource","subpage","url","CMA","TMA","num_of_prev_attempts","studied_credits","final_result","disability","age_band","imd_band","highest_education","region","gender")
-
-###########################################################
-## Convert Categorical String Features to Numeric Values ##
-###########################################################
+# Convert strings to numeric values
 
 df3$final_result <- as.numeric(factor(df3$final_result , levels=c("Distinction","Fail","Pass","Withdrawn")))
 df3$disability <- as.numeric(factor(df3$disability , levels=c("N","Y")))
@@ -112,72 +95,87 @@ df3$highest_education <- as.numeric(factor(df3$highest_education , levels=c("A L
 df3$region <- as.numeric(factor(df3$region , levels=c("East Anglian Region","East Midlands Region","Ireland","London Region","North Region","North Western Region","Scotland","South East Region","South Region","South West Region","Wales","West Midlands Region","Yorkshire Region")))
 df3$gender <- as.numeric(factor(df3$gender , levels=c("M","F")))
 
-#################################
-## Prepare Outliers in Dataset ##
-#################################
 
-source('~/GitHub/Feature-Engineering-Project/Data Upload Assignment/Removing Outliers Script.R')
+#####################################
+## Remove Unwanted columns from DF ##
+#####################################
 
-##################################
-## Remove Outliers from Dataset ##
-##################################
+df4 <- subset(df3, select = -c(CMA, TMA))
 
-outlierKD_final_result(df3, final_result)
-y
-outlierKD2(df3, dataplus)
-y
-outlierKD3(df3, dualpane)
-y
-outlierKD4(df3, forumng)
-y
-outlierKD5(df3, glossary)
-y
-outlierKD6(df3, homepage)
-y
-outlierKD7(df3, htmlactivity)
-y
-outlierKD8(df3, oucollaborate)
-y
-outlierKD9(df3, oucontent)
-y
-outlierKD10(df3, ouwiki)
-y
-outlierKD11(df3, page)
-y
-outlierKD12(df3, questionnaire)
-y
-outlierKD13(df3, quiz)
-y
-outlierKD14(df3, repeatactivity)
-y
-outlierKD15(df3, resource)
-y
-outlierKD16(df3, subpage)
-y
-outlierKD17(df3, url)
-y
-outlierKD18(df3, CMA)
-y
-outlierKD19(df3, TMA)
-y
-outlierKD20(df3, num_of_prev_attempts)
-y
-outlierKD21(df3, studied_credits)
-y
+#####################################################################################
+## Split data into final_result_Training and final_result_Test set at 3/4ths split ##
+#####################################################################################
 
-#################################
-## Export and Save New Dataset ##
-#################################
+index <- sample(1:nrow(df4),round(0.75*nrow(df4)))
+final_result_Train <- df4[index,]
+final_result_Test <- df4[-index,]
 
-# Set Project working directory
-setwd("~/GitHub/Feature-Engineering-Project/Data Upload Assignment")
+###################################
+## Fit a linear regression model ##
+###################################
 
-write.csv(df3, file = "Normalized_fff_2014j_Dataset.csv")
+lm.fit <- glm(final_result~., data=final_result_Train)
+summary(lm.fit)
+pr.lm <- predict(lm.fit,final_result_Test)
+MSE.lm <- sum((pr.lm - final_result_Test$final_result)^2)/nrow(final_result_Test)
 
-##########################################
-## Export data frame with no N/A Values ##
-##########################################
 
-df3_na_none <- na.omit(df3)
+########################
+## Fit Descision Tree ##
+########################
 
-write.csv(df3_na_none, file = "Normalized_fff_2014j_Dataset_NA_Removed.csv")
+
+n <- names(df4)
+frmla <- as.formula(paste("final_result ~", paste(n[!n %in% "final_result"], collapse = " + ")))
+tr = tree(frmla, data=df4)
+summary(tr)
+plot(tr); text(tr)
+
+######################################################
+## Predicting final_result using the neural network ##
+######################################################
+
+final_result_Test1 <- subset(final_result_Test, select = -c(final_result))
+
+final_result_Test <- data.frame(final_result_Test1, final_result_Test$final_result)
+
+names(final_result_Test)[names(final_result_Test) == 'final_result_Test.final_result'] <- 'final_result'
+
+pr.tr <- predict(tr,final_result_Test[,1:25])
+
+pr.tr_ <- pr.tr["net.result"]*(max(df4$final_result)-min(df4$final_result))+min(df4$final_result)
+
+
+final_result_Test.r <- (final_result_Test$final_result)*(max(df4$final_result)-min(df4$final_result))+min(df4$final_result)
+
+MSE.tr <- sum((final_result_Test.r - pr.tr_)^2)/nrow(final_result_Test)
+
+
+print(paste(MSE.lm,MSE.tr))
+
+
+##########################
+## Plot the performance ##
+##########################
+
+par(mfrow=c(1,2))
+
+plot(final_result_Test$final_result,pr.tr_,col='red',main='Real vs Predicted Neural Network',pch=18,cex=0.7)
+abline(0,1,lwd=2)
+legend('bottomright',legend='tr',pch=18,col='red', bty='n')
+
+plot(final_result_Test$final_result,pr.lm,col='blue',main='Real vs predicted Linear Model',pch=18, cex=0.7)
+abline(0,1,lwd=2)
+legend('bottomright',legend='LM',pch=18,col='blue', bty='n', cex=.95)
+
+################
+## More Plots ##
+################
+
+par(mfrow=c(1,1))
+
+{plot(final_result_Test$final_result,pr.tr_,col='red',main='Real vs Predicted Neural Network',pch=18,cex=0.7)
+  points(final_result_Test$final_result,pr.lm,col='blue',pch=18,cex=0.7)
+  abline(0,1,lwd=2)
+  legend('bottomright',legend=c('tr','LM'),pch=18,col=c('red','blue'))}
+
