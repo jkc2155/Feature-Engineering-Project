@@ -105,7 +105,7 @@ names(df3) <- c("id_student","dataplus","dualpane","forumng","glossary","homepag
 ###########################################################
 
 df3$final_result <- as.numeric(factor(df3$final_result , levels=c("Distinction","Fail","Pass","Withdrawn")))
-df3$disabilityt <- as.numeric(factor(df3$disability , levels=c("N","Y")))
+df3$disability <- as.numeric(factor(df3$disability , levels=c("N","Y")))
 df3$age_band <- as.numeric(factor(df3$age_band , levels=c("0-35","35-55","55<=")))
 df3$imd_band <- as.numeric(factor(df3$imd_band , levels=c( "","0-10%","10-20","20-30%","30-40%" ,"40-50%","50-60%","60-70%","70-80%","80-90%","90-100%")))
 df3$highest_education <- as.numeric(factor(df3$highest_education , levels=c("A Level or Equivalent","HE Qualification","Lower Than A Level","No Formal quals","Post Graduate Qualification")))
@@ -174,3 +174,10 @@ setwd("~/GitHub/Feature-Engineering-Project/Data Upload Assignment")
 
 write.csv(df3, file = "Normalized_fff_2014j_Dataset.csv")
 
+##########################################
+## Export data frame with no N/A Values ##
+##########################################
+
+df3_na_none <- na.omit(df3)
+
+write.csv(df3_na_none, file = "Normalized_fff_2014j_Dataset_NA_Removed.csv")
