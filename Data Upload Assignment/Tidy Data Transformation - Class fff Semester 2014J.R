@@ -77,26 +77,6 @@ df <- merge(df, std_registration_fff_2014j, by = "id_student")
 # Check for missing values in data frame
 apply(df,2,function(x) sum(is.na(x)))
 
-# Begin feature selection and remove uneeded columns from dataframe
-df1 <- subset(df, select = -c(date_unregistration, date_registration) )
-
-# Replace missing values in data frame with "0"
-df1[is.na(df1)] <- 0
-
-names(df1) <- c("id_student","dataplus","dualpane","forumng","glossary","homepage","htmlactivity","oucollaborate","oucontent","ouwiki","page","questionnaire","quiz","repeatactivity","resource","subpage","url","CMA","TMA","num_of_prev_attempts","studied_credits","final_result","disability","age_band","imd_band","highest_education","region","gender")
-
-###########################################################
-## Convert Categorical String Features to Numeric Values ##
-###########################################################
-
-df1$final_result <- as.numeric(factor(df1$final_result , levels=c("Distinction","Fail","Pass","Withdrawn")))
-df1$disability <- as.numeric(factor(df1$disability , levels=c("N","Y")))
-df1$age_band <- as.numeric(factor(df1$age_band , levels=c("0-35","35-55","55<=")))
-df1$imd_band <- as.numeric(factor(df1$imd_band , levels=c( "","0-10%","10-20","20-30%","30-40%" ,"40-50%","50-60%","60-70%","70-80%","80-90%","90-100%")))
-df1$highest_education <- as.numeric(factor(df1$highest_education , levels=c("A Level or Equivalent","HE Qualification","Lower Than A Level","No Formal quals","Post Graduate Qualification")))
-df1$region <- as.numeric(factor(df1$region , levels=c("East Anglian Region","East Midlands Region","Ireland","London Region","North Region","North Western Region","Scotland","South East Region","South Region","South West Region","Wales","West Midlands Region","Yorkshire Region")))
-df1$gender <- as.numeric(factor(df1$gender , levels=c("M","F")))
-
 #################################
 ## Export and Save New Dataset ##
 #################################
@@ -104,5 +84,5 @@ df1$gender <- as.numeric(factor(df1$gender , levels=c("M","F")))
 # Set Project working directory
 setwd("~/GitHub/Feature-Engineering-Project/Data Upload Assignment")
 
-write.csv(df1, file = "Tidy_Data_fff_2014j_Dataset.csv")
+write.csv(df, file = "Tidy_Data_fff_2014j_Dataset.csv")
 
