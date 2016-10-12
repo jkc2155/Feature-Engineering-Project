@@ -7,7 +7,7 @@ apply(df4,2,function(x) sum(is.na(x)))
 df4 <- na.omit(df4)
 
 # Select all numeric values and remove columns with large amount of missing values
-df5_CMA <- subset(df4, select = -c(final_result, disability, age_band, imd_band, highest_education, region, gender, TMA))
+df5_CMA <- subset(df4, select = -c(df1.final_result, df1.disability, df1.age_band, df1.imd_band, df1.highest_education, df1.region, df1.gender, TMA))
 
 # Split data into CMA_Training and CMA_Test set at 3/4ths split
 index <- sample(1:nrow(df5_CMA),round(0.75*nrow(df5_CMA)))
@@ -42,7 +42,7 @@ CMA_Test <- data.frame(CMA_Test1, CMA_Test$CMA)
 
 names(CMA_Test)[names(CMA_Test) == 'CMA_Test.CMA'] <- 'CMA'
 
-pr.nn <- compute(nn,CMA_Test[,1:19])
+pr.nn <- compute(nn,CMA_Test[,1:20])
 
 pr.nn_ <- pr.nn$net.result*(max(df5_CMA$CMA)-min(df5_CMA$CMA))+min(df5_CMA$CMA)
 CMA_Test.r <- (CMA_Test$CMA)*(max(df5_CMA$CMA)-min(df5_CMA$CMA))+min(df5_CMA$CMA)
